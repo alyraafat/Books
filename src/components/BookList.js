@@ -3,11 +3,11 @@ import useBooksContext from '../hooks/use-books-context';
 import BookShow from './BookShow';
 function BookList() {
   const { books } = useBooksContext()
-  const renderedbooks = books.map((book)=>{
-    <BookShow book={book}/>
+  const renderedbooks = books.map((book) => {
+    return <BookShow key={book.id} book={book}/>;
   })
   return (
-    <div>
+    <div className="book-list">
       {renderedbooks}
     </div>
   )

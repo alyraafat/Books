@@ -6,10 +6,10 @@ const BooksContext = createContext();
 function Provider({ children }) {
     const [books,setBooks] = useState([]);
 
-    const fetchBooks = async ()=>{
+    const fetchBooks = useCallback(async ()=>{
         const res = await axios.get("http://localhost:3001/books");
         setBooks(res.data);
-    };
+    },[]);
 
     const editBookById = async (id,title)=>{
         const res = await axios.put(`http://localhost:3001/books/${id}`,{
@@ -27,7 +27,7 @@ function Provider({ children }) {
     };
 
     const deleteBookById = async (id)=>{
-        const res = await axios.delete(`http://localhost:3001/books/${id}`);
+        await axios.delete(`http://localhost:3001/books/${id}`);
 
         const deletedBooks = books.filter((book)=>{
             return book.id!==id;
@@ -41,7 +41,8 @@ function Provider({ children }) {
             title:title
         });
 
-        const newBooks = [...books,...res.data]
+        const newBooks = [...books,{...res.data}]
+        // or [...books,res.data]
 
         setBooks(newBooks);
     };
@@ -55,9 +56,9 @@ function Provider({ children }) {
        createBook 
     }
     return (
-        <BooksContext value={valueToShare}>
+        <BooksContext.Provider value={valueToShare}>
             {children}
-        </BooksContext>
+        </BooksContext.Provider>
     )
 }
 
